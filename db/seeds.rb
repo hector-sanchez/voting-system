@@ -1,9 +1,60 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# This file creates seed data for the voting application
+# The data can be loaded with the bin/rails db:seed command
+
+# Clear existing data to avoid duplicates
+puts "Cleaning database..."
+Vote.destroy_all
+Performer.destroy_all
+User.destroy_all
+
+# Create performers
+puts "Creating performers..."
+performers = [
+  { name: "Taylor Swift" },
+  { name: "Beyoncé" },
+  { name: "Bruno Mars" },
+  { name: "Adele" },
+  { name: "Ed Sheeran" }
+]
+
+created_performers = performers.map do |performer_attrs|
+  Performer.create!(performer_attrs)
+end
+puts "Created #{Performer.count} performers"
+
+# Create users with passwords
+puts "Creating users..."
+30.times do |i|
+  User.create!(
+    email: "user#{i+1}@example.com",
+    password: "password123",
+    zipcode: "#{10000 + rand(89999)}"
+  )
+end
+puts "Created #{User.count} users"
+
+# Create votes - each user votes for a random performer
+puts "Creating votes..."
+User.all.each do |user|
+  # Randomly decide if this user will vote (80% chance)
+  if rand < 0.8
+    performer = created_performers.sample
+    Vote.create!(
+      user: user,
+      performer: performer
+    )
+    puts "User #{user.email} voted for #{performer.name}"
+  else
+    puts "User #{user.email} did not vote"
+  end
+end
+puts "Created #{Vote.count} votes"
+
+# Print voting results
+vote_counts = Vote.group(:performer_id).count
+puts "\nVoting results:"
+Performer.all.each do |performer|
+  votes = vote_counts[performer.id] || 0
+  puts "#{performer.name}: #{votes} votes"
+end
+puts "Total votes: #{Vote.count}"
