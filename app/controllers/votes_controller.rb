@@ -1,6 +1,21 @@
 class VotesController < ApplicationController
   include Authentication
 
+  # Skip authentication for HTML requests to the voting page (React will handle auth)
+  # But the issue is that when the browser navigates to /vote,
+  # it's making a regular HTML request, not an AJAX request with the
+  # Authorization header.
+  # The Rails controller is trying to authenticate the HTML request,
+  # but there's no way for the browser to automatically include the
+  # JWT token in a regular page navigation.
+  skip_before_action :authenticate_user, only: [:new]
+
+  # GET /vote (voting page)
+  def new
+    # Render the voting form
+    # Authentication will be handled by the React component
+  end
+
   # POST /votes
   def create
     # Get the authenticated user from the JWT token

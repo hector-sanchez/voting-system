@@ -19,13 +19,16 @@ class SessionsController < ApplicationController
 
     if user
       token = encode_token(user.generate_token_payload)
+
       render json: {
         message: 'Login successful',
         token: token,
+        redirect_to: (user.vote.present? ? '/' : '/vote'), # Determine redirect path based on voting status
         user: {
           id: user.id,
           email: user.email,
-          zipcode: user.zipcode
+          zipcode: user.zipcode,
+          has_voted: user.vote.present?
         }
       }, status: :ok
     else
