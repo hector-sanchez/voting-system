@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   post "sessions", to: "sessions#create"    # Login
   delete "sessions", to: "sessions#destroy" # Logout
 
+  # Performer routes
+  post "performers", to: "performers#create" # Create performer and vote
+
   # Defines the root path route ("/")
   root "home#index"
 end
