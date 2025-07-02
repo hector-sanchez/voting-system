@@ -34,4 +34,36 @@ RSpec.describe Performer, type: :model do
       expect(performer.name).to eq("Test Performer")
     end
   end
+
+  describe 'voting functionality' do
+    let(:performer) { create(:performer) }
+    let(:user1) { create(:user) }
+    let(:user2) { create(:user) }
+
+    describe '#vote_count' do
+      it 'returns 0 when no votes' do
+        expect(performer.vote_count).to eq(0)
+      end
+
+      it 'returns correct count when has votes' do
+        user1.vote_for(performer)
+        user2.vote_for(performer)
+        expect(performer.vote_count).to eq(2)
+      end
+    end
+
+    describe 'associations' do
+      it 'has many votes' do
+        user1.vote_for(performer)
+        user2.vote_for(performer)
+        expect(performer.votes.count).to eq(2)
+      end
+
+      it 'has many voters through votes' do
+        user1.vote_for(performer)
+        user2.vote_for(performer)
+        expect(performer.voters).to include(user1, user2)
+      end
+    end
+  end
 end

@@ -1,6 +1,10 @@
 class User < ApplicationRecord
   has_secure_password
 
+  # Voting associations
+  has_one :vote
+  has_one :voted_performer, through: :vote, source: :performer
+
   # Validations
   validates :email, presence: true,
                    uniqueness: { case_sensitive: false },
@@ -41,5 +45,18 @@ class User < ApplicationRecord
   # Method to check if a token is still valid
   def token_valid?(token_version_from_token)
     token_version == token_version_from_token
+  end
+
+  # Voting methods
+  def vote_for(performer)
+    return false if has_voted?
+
+    self.create_vote(performer: performer)
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
+
+  def has_voted?
+    vote.present?
   end
 end

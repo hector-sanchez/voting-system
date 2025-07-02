@@ -127,4 +127,37 @@ RSpec.describe User, type: :model do
       end
     end
   end
+  
+  describe 'voting functionality' do
+    let(:user) { create(:user) }
+    let(:performer1) { create(:performer, name: 'The Beatles') }
+    let(:performer2) { create(:performer, name: 'Queen') }
+
+    describe '#vote_for' do
+      it 'allows user to vote for a performer' do
+        result = user.vote_for(performer1)
+        expect(result).to be_truthy
+        expect(user.has_voted?).to be true
+        expect(user.voted_performer).to eq(performer1)
+      end
+
+      it 'prevents user from voting twice' do
+        user.vote_for(performer1)
+        result = user.vote_for(performer2)
+        expect(result).to be false
+        expect(user.voted_performer).to eq(performer1)
+      end
+    end
+
+    describe '#has_voted?' do
+      it 'returns true when user has voted' do
+        user.vote_for(performer1)
+        expect(user.has_voted?).to be true
+      end
+
+      it 'returns false when user has not voted' do
+        expect(user.has_voted?).to be false
+      end
+    end
+  end
 end

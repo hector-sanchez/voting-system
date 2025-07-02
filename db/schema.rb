@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_02_064005) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_02_072231) do
   create_table "performers", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -29,4 +29,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_02_064005) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "votes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "performer_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["performer_id"], name: "index_votes_on_performer_id"
+    t.index ["user_id"], name: "index_votes_on_user_id"
+    t.index ["user_id"], name: "index_votes_on_user_id_unique", unique: true
+  end
+
+  add_foreign_key "votes", "performers"
+  add_foreign_key "votes", "users"
 end
