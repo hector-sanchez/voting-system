@@ -24,7 +24,7 @@ RSpec.describe VotingResultsController, type: :request do
 
   describe 'GET /voting_results' do
     it 'returns all performers with their vote counts' do
-      get '/voting_results'
+      get '/voting_results', as: :json
 
       expect(response).to have_http_status(:ok)
       json_response = JSON.parse(response.body)
@@ -52,7 +52,7 @@ RSpec.describe VotingResultsController, type: :request do
     end
 
     it 'handles empty voting results gracefully' do
-      get '/voting_results'
+      get '/voting_results', as: :json
 
       expect(response).to have_http_status(:ok)
       json_response = JSON.parse(response.body)
