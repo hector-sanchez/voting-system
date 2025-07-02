@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Authentication routes
+  get "sign_in", to: "sessions#new"        # Sign in page
   post "sessions", to: "sessions#create"    # Login
   delete "sessions", to: "sessions#destroy" # Logout
 

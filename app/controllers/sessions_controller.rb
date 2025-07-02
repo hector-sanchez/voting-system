@@ -2,7 +2,12 @@ class SessionsController < ApplicationController
   include Authentication
 
   # Skip authentication for both login and logout actions
-  skip_before_action :authenticate_user, only: [:create, :destroy]
+  skip_before_action :authenticate_user, only: [:new, :create, :destroy]
+
+  # GET /sign_in (sign in page)
+  def new
+    # Render the sign in form
+  end
 
   # POST /sessions (login)
   def create
