@@ -2,7 +2,7 @@ module Authentication
   extend ActiveSupport::Concern
 
   included do
-    before_action :authenticate_user, except: [:index, :show] # Adjust as needed
+    before_action :authenticate_user
   end
 
   private

@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   # Vote routes
   post "votes", to: "votes#create" # Cast a vote for an existing performer
 
+  # Voting results routes
+  get "voting_results", to: "voting_results#index"      # List all performers with vote counts
+
   # Defines the root path route ("/")
   root "home#index"
 end
