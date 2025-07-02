@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   # Performer routes
   post "performers", to: "performers#create" # Create performer and vote
 
+  # Vote routes
+  post "votes", to: "votes#create" # Cast a vote for an existing performer
+
   # Defines the root path route ("/")
   root "home#index"
 end
