@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   delete "sessions", to: "sessions#destroy" # Logout
 
   # Performer routes
+  get "performers", to: "performers#index"   # List all performers
   post "performers", to: "performers#create" # Create performer and vote
 
   # Vote routes

@@ -1,6 +1,9 @@
 class PerformersController < ApplicationController
   include Authentication
 
+  # Skip authentication for the index action (public endpoint)
+  skip_before_action :authenticate_user, only: [:index]
+
   # POST /performers
   def create
     # Use the authenticated user from the token
@@ -46,6 +49,15 @@ class PerformersController < ApplicationController
         voted_performer: user.voted_performer.name
       }
     }, status: :created
+  end
+
+  # GET /performers
+  def index
+    performers = Performer.select(:id, :name).order(:name)
+    
+    render json: {
+      performers: performers.as_json(only: [:id, :name])
+    }
   end
 
   private
