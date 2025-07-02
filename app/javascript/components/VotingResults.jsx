@@ -130,7 +130,7 @@ const VotingResults = () => {
 
 	return (
 		<div style={containerStyle}>
-			<h1 style={headingStyle}>Performer Voting Results</h1>
+			<h1 style={headingStyle}>Voting Results</h1>
 
 			<div style={resultsContainerStyle}>
 				<ul style={listStyle}>

@@ -121,17 +121,6 @@ const successStyle = {
 	borderRadius: "6px",
 };
 
-const alreadyVotedStyle = {
-	backgroundColor: "#f5f5f5",
-	color: "#666666",
-	padding: "16px",
-	border: "1px solid #ddd",
-	borderRadius: "6px",
-	textAlign: "center",
-	fontSize: "1rem",
-	lineHeight: "1.5",
-};
-
 const VotingPage = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
@@ -150,25 +139,25 @@ const VotingPage = () => {
 
 	const checkAuthAndLoadData = async () => {
 		// Check if user is authenticated
-		const token = localStorage.getItem('authToken');
-		
+		const token = localStorage.getItem("authToken");
+
 		if (!token) {
 			// No token found, redirect to sign in
-			window.location.href = '/sign_in';
+			window.location.href = "/sign_in";
 			return;
 		}
 
 		try {
 			// For now, we'll check voting status via API call
 			// TODO: Store has_voted flag in token for better UX
-			
+
 			// Load performers
 			await loadPerformers();
-			
+
 			setIsAuthenticated(true);
 		} catch (err) {
-			console.error('Error checking auth:', err);
-			window.location.href = '/sign_in';
+			console.error("Error checking auth:", err);
+			window.location.href = "/sign_in";
 			return;
 		} finally {
 			setIsLoading(false);
@@ -196,7 +185,7 @@ const VotingPage = () => {
 
 	const handleVoteSubmit = async (e) => {
 		e.preventDefault();
-		
+
 		if (!selectedPerformer) {
 			setError("Please select a performer to vote for");
 			return;
@@ -207,7 +196,7 @@ const VotingPage = () => {
 		setSuccess(null);
 
 		try {
-			const token = localStorage.getItem('authToken');
+			const token = localStorage.getItem("authToken");
 			const csrfToken = document
 				.querySelector('meta[name="csrf-token"]')
 				?.getAttribute("content");
@@ -217,13 +206,13 @@ const VotingPage = () => {
 				headers: {
 					"Content-Type": "application/json",
 					Accept: "application/json",
-					"Authorization": `Bearer ${token}`,
+					Authorization: `Bearer ${token}`,
 					"X-CSRF-Token": csrfToken,
 				},
 				body: JSON.stringify({
 					vote: {
-						performer_id: selectedPerformer
-					}
+						performer_id: selectedPerformer,
+					},
 				}),
 			});
 
@@ -232,10 +221,8 @@ const VotingPage = () => {
 			if (response.ok) {
 				setSuccess("Vote cast successfully!");
 				setHasVoted(true);
-				// Redirect to results after a delay
-				setTimeout(() => {
-					window.location.href = '/';
-				}, 2000);
+				// Redirect to results immediately
+				window.location.href = "/";
 			} else {
 				setError(data.error || "Failed to cast vote");
 			}
@@ -248,7 +235,7 @@ const VotingPage = () => {
 
 	const handleCreatePerformer = async (e) => {
 		e.preventDefault();
-		
+
 		if (!newPerformerName.trim()) {
 			setError("Please enter a performer name");
 			return;
@@ -259,7 +246,7 @@ const VotingPage = () => {
 		setSuccess(null);
 
 		try {
-			const token = localStorage.getItem('authToken');
+			const token = localStorage.getItem("authToken");
 			const csrfToken = document
 				.querySelector('meta[name="csrf-token"]')
 				?.getAttribute("content");
@@ -269,13 +256,13 @@ const VotingPage = () => {
 				headers: {
 					"Content-Type": "application/json",
 					Accept: "application/json",
-					"Authorization": `Bearer ${token}`,
+					Authorization: `Bearer ${token}`,
 					"X-CSRF-Token": csrfToken,
 				},
 				body: JSON.stringify({
 					performer: {
-						name: newPerformerName.trim()
-					}
+						name: newPerformerName.trim(),
+					},
 				}),
 			});
 
@@ -284,10 +271,8 @@ const VotingPage = () => {
 			if (response.ok) {
 				setSuccess("Performer created and vote cast successfully!");
 				setHasVoted(true);
-				// Redirect to results after a delay
-				setTimeout(() => {
-					window.location.href = '/';
-				}, 2000);
+				// Redirect to results immediately
+				window.location.href = "/";
 			} else {
 				setError(data.error || "Failed to create performer");
 			}
@@ -327,73 +312,71 @@ const VotingPage = () => {
 				<div style={columnStyle}>
 					<h2 style={columnHeadingStyle}>Vote for a Performer</h2>
 					
-					{hasVoted ? (
-						<div style={alreadyVotedStyle}>
-							<p><strong>You have already voted!</strong></p>
-							<p>Thank you for participating. You can view the current results on the homepage.</p>
-						</div>
-					) : (
-						<form onSubmit={handleVoteSubmit}>
-							<ul style={radioListStyle}>
-								{performers.map((performer) => (
-									<li key={performer.id} style={radioItemStyle}>
-										<input
-											type="radio"
-											id={`performer-${performer.id}`}
-											name="performer"
-											value={performer.id}
-											checked={selectedPerformer === performer.id.toString()}
-											onChange={(e) => setSelectedPerformer(e.target.value)}
-											style={radioInputStyle}
-										/>
-										<label
-											htmlFor={`performer-${performer.id}`}
-											style={radioLabelStyle}
-										>
-											{performer.name}
-										</label>
-									</li>
-								))}
-							</ul>
-							<button
-								type="submit"
-								disabled={isVoting || !selectedPerformer}
-								style={!selectedPerformer || isVoting ? disabledButtonStyle : buttonStyle}
-							>
-								{isVoting ? "Voting..." : "Vote"}
-							</button>
-						</form>
-					)}
+					<form onSubmit={handleVoteSubmit}>
+						<ul style={radioListStyle}>
+							{performers.map((performer) => (
+								<li
+									key={performer.id}
+									style={radioItemStyle}
+								>
+									<input
+										type="radio"
+										id={`performer-${performer.id}`}
+										name="performer"
+										value={performer.id}
+										checked={selectedPerformer === performer.id.toString()}
+										onChange={(e) => setSelectedPerformer(e.target.value)}
+										style={radioInputStyle}
+										disabled={hasVoted}
+									/>
+									<label
+										htmlFor={`performer-${performer.id}`}
+										style={radioLabelStyle}
+									>
+										{performer.name}
+									</label>
+								</li>
+							))}
+						</ul>
+						<button
+							type="submit"
+							disabled={isVoting || !selectedPerformer || hasVoted}
+							style={
+								!selectedPerformer || isVoting || hasVoted
+									? disabledButtonStyle
+									: buttonStyle
+							}
+						>
+							{isVoting ? "Voting..." : "Vote"}
+						</button>
+					</form>
 				</div>
 
 				{/* Right Column - Create New Performer */}
 				<div style={columnStyle}>
 					<h2 style={columnHeadingStyle}>Add a New Performer</h2>
 					
-					{hasVoted ? (
-						<div style={alreadyVotedStyle}>
-							<p><strong>You have already voted!</strong></p>
-							<p>You can no longer add new performers or cast additional votes.</p>
-						</div>
-					) : (
-						<form onSubmit={handleCreatePerformer}>
-							<input
-								type="text"
-								value={newPerformerName}
-								onChange={(e) => setNewPerformerName(e.target.value)}
-								placeholder="Enter performer name"
-								style={inputStyle}
-								disabled={isCreating}
-							/>
-							<button
-								type="submit"
-								disabled={isCreating || !newPerformerName.trim()}
-								style={!newPerformerName.trim() || isCreating ? disabledButtonStyle : buttonStyle}
-							>
-								{isCreating ? "Creating..." : "Create & Vote"}
-							</button>
-						</form>
-					)}
+					<form onSubmit={handleCreatePerformer}>
+						<input
+							type="text"
+							value={newPerformerName}
+							onChange={(e) => setNewPerformerName(e.target.value)}
+							placeholder="Enter performer name"
+							style={inputStyle}
+							disabled={isCreating || hasVoted}
+						/>
+						<button
+							type="submit"
+							disabled={isCreating || !newPerformerName.trim() || hasVoted}
+							style={
+								!newPerformerName.trim() || isCreating || hasVoted
+									? disabledButtonStyle
+									: buttonStyle
+							}
+						>
+							{isCreating ? "Creating..." : "Create & Vote"}
+						</button>
+					</form>
 				</div>
 			</div>
 		</div>
