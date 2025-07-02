@@ -1,0 +1,40 @@
+<%# This is the landing page that shows different content based on
+authentication status %>
+<div id="home-content">
+	<!-- Content will be dynamically loaded based on authentication status -->
+	<div style="text-align: center; padding: 40px 20px; color: #666">
+		Loading...
+	</div>
+</div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const token = localStorage.getItem("authToken");
+		const homeContent = document.getElementById("home-content");
+
+		if (token) {
+			try {
+				// Decode JWT token to check if user is authenticated
+				const payload = JSON.parse(atob(token.split(".")[1]));
+				const currentTime = Math.floor(Date.now() / 1000);
+
+				// Check if token is expired
+				if (payload.exp && currentTime > payload.exp) {
+					localStorage.removeItem("authToken");
+					window.location.href = "/sign_in";
+					return;
+				}
+
+				// User is authenticated, redirect to voting results
+				window.location.href = "/voting_results";
+			} catch (err) {
+				console.error("Error parsing token:", err);
+				localStorage.removeItem("authToken");
+				window.location.href = "/sign_in";
+			}
+		} else {
+			// User is not authenticated, redirect to sign in
+			window.location.href = "/sign_in";
+		}
+	});
+</script>

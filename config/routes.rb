@@ -22,5 +22,5 @@ Rails.application.routes.draw do
   get "voting_results", to: "voting_results#index"      # List all performers with vote counts
 
   # Defines the root path route ("/")
-  root "home#index"
+  root "voting_results#index"
 end

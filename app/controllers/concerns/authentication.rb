@@ -20,7 +20,7 @@ module Authentication
     # Check if token is still valid (not invalidated)
     return render_unauthorized unless user.token_valid?(decoded_token['token_version'])
 
-    @current_user = user
+    @current_user = user    # List first 10 users with their login credentials
   end
 
   def current_user
