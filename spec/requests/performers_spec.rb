@@ -122,4 +122,47 @@ RSpec.describe 'Performers', type: :request do
       end
     end
   end
+
+  describe 'GET /performers' do
+    before do
+      # Create some test performers
+      @performer1 = create(:performer, name: 'Adele')
+      @performer2 = create(:performer, name: 'Bruno Mars')
+      @performer3 = create(:performer, name: 'Beyoncé')
+    end
+
+    it 'returns all performers without authentication' do
+      get '/performers', as: :json
+
+      expect(response).to have_http_status(:ok)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['performers']).to be_an(Array)
+      expect(json_response['performers'].length).to eq(3)
+
+      # Check that performers are ordered by name
+      performers = json_response['performers']
+      expect(performers[0]['name']).to eq('Adele')
+      expect(performers[1]['name']).to eq('Beyoncé')
+      expect(performers[2]['name']).to eq('Bruno Mars')
+
+      # Check that only id and name are returned
+      performers.each do |performer|
+        expect(performer.keys.sort).to eq(['id', 'name'])
+        expect(performer['id']).to be_a(Integer)
+        expect(performer['name']).to be_a(String)
+      end
+    end
+
+    it 'returns empty array when no performers exist' do
+      Performer.destroy_all
+      
+      get '/performers', as: :json
+
+      expect(response).to have_http_status(:ok)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['performers']).to eq([])
+    end
+  end
 end
