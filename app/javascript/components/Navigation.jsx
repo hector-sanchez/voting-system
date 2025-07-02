@@ -141,8 +141,46 @@ const Navigation = () => {
 	}
 
 	if (!user) {
-		// User not signed in - minimal header or no header
-		return null;
+		// User not signed in - show basic navigation with sign in link
+		return (
+			<header style={headerStyle}>
+				<div style={containerStyle}>
+					<nav style={leftSectionStyle}>
+						<a
+							href="/"
+							style={currentPath === "/" ? activeNavLinkStyle : navLinkStyle}
+							onClick={(e) => {
+								e.preventDefault();
+								navigateTo("/");
+							}}
+						>
+							Voting Results
+						</a>
+					</nav>
+
+					<div style={rightSectionStyle}>
+						<a
+							href="/sign_in"
+							style={{
+								...navLinkStyle,
+								backgroundColor: "#000000",
+								color: "#ffffff",
+								borderRadius: "4px",
+								padding: "8px 16px",
+								textTransform: "uppercase",
+								letterSpacing: "0.5px",
+							}}
+							onClick={(e) => {
+								e.preventDefault();
+								navigateTo("/sign_in");
+							}}
+						>
+							Sign In
+						</a>
+					</div>
+				</div>
+			</header>
+		);
 	}
 
 	return (
