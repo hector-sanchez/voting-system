@@ -127,7 +127,7 @@ RSpec.describe User, type: :model do
       end
     end
   end
-  
+
   describe 'voting functionality' do
     let(:user) { create(:user) }
     let(:performer1) { create(:performer, name: 'The Beatles') }
