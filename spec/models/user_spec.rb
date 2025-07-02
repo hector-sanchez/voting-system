@@ -119,9 +119,11 @@ RSpec.describe User, type: :model do
         token_payload = user.generate_token_payload
         expect(token_payload).to include(
           user_id: user.id,
+          name: user.name,
           email: user.email,
           zipcode: user.zipcode,
-          token_version: user.token_version
+          token_version: user.token_version,
+          has_voted: user.has_voted?
         )
         expect(token_payload[:exp]).to be > Time.current.to_i
       end

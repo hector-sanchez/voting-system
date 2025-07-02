@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_one :voted_performer, through: :vote, source: :performer
 
   # Validations
+  validates :name, presence: true, length: { minimum: 1, maximum: 50 }
   validates :email, presence: true,
                    uniqueness: { case_sensitive: false },
                    format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -35,9 +36,11 @@ class User < ApplicationRecord
   def generate_token_payload
     {
       user_id: id,
+      name: name,
       email: email,
       zipcode: zipcode,
       token_version: token_version,
+      has_voted: has_voted?,
       exp: 24.hours.from_now.to_i
     }
   end

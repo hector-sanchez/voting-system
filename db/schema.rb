@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_02_072231) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_02_222900) do
   create_table "performers", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -25,6 +25,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_02_072231) do
     t.integer "token_version", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
     t.index ["email", "zipcode"], name: "index_users_on_email_and_zipcode", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
   end

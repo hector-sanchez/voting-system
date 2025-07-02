@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 // Style constants defined outside component for reuse
 const containerStyle = {
 	maxWidth: "900px",
-	margin: "40px auto",
+	margin: "20px auto 40px auto", // Reduced top margin since we have nav header
 	padding: "0 20px",
 	fontFamily:
 		'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
@@ -148,8 +148,9 @@ const VotingPage = () => {
 		}
 
 		try {
-			// For now, we'll check voting status via API call
-			// TODO: Store has_voted flag in token for better UX
+			// Decode JWT token to get user info including voting status
+			const payload = JSON.parse(atob(token.split(".")[1]));
+			setHasVoted(payload.has_voted || false);
 
 			// Load performers
 			await loadPerformers();
@@ -304,6 +305,12 @@ const VotingPage = () => {
 		<div style={containerStyle}>
 			<h1 style={headingStyle}>Cast your vote today!</h1>
 
+			{hasVoted && (
+				<div style={successStyle}>
+					✓ You have already voted! Thank you for participating.
+				</div>
+			)}
+
 			{error && <div style={errorStyle}>{error}</div>}
 			{success && <div style={successStyle}>{success}</div>}
 
@@ -311,7 +318,7 @@ const VotingPage = () => {
 				{/* Left Column - Vote for Existing Performer */}
 				<div style={columnStyle}>
 					<h2 style={columnHeadingStyle}>Vote for a Performer</h2>
-					
+
 					<form onSubmit={handleVoteSubmit}>
 						<ul style={radioListStyle}>
 							{performers.map((performer) => (
@@ -355,7 +362,7 @@ const VotingPage = () => {
 				{/* Right Column - Create New Performer */}
 				<div style={columnStyle}>
 					<h2 style={columnHeadingStyle}>Add a New Performer</h2>
-					
+
 					<form onSubmit={handleCreatePerformer}>
 						<input
 							type="text"

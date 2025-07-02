@@ -40,7 +40,7 @@ const VotingResults = () => {
 	// Style constants - much cleaner than inline styles in JSX
 	const containerStyle = {
 		maxWidth: "700px",
-		margin: "40px auto",
+		margin: "20px auto 40px auto", // Reduced top margin since we have nav header
 		padding: "0 20px",
 		fontFamily:
 			'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',

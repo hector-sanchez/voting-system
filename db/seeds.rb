@@ -24,8 +24,18 @@ puts "Created #{Performer.count} performers"
 
 # Create users with passwords
 puts "Creating users..."
+names = [
+  "Alice Johnson", "Bob Smith", "Charlie Brown", "Diana Prince", "Ethan Hunt",
+  "Fiona Green", "George Wilson", "Hannah Davis", "Ian Malcolm", "Julia Roberts",
+  "Kevin Hart", "Laura Palmer", "Michael Scott", "Nina Williams", "Oscar Wilde",
+  "Paula Abdul", "Quincy Jones", "Rachel Green", "Steve Jobs", "Tina Turner",
+  "Uma Thurman", "Victor Hugo", "Wendy Darling", "Xavier Charles", "Yuki Tanaka",
+  "Zoe Baker", "Aaron Paul", "Bella Swan", "Connor MacLeod", "Donna Noble"
+]
+
 30.times do |i|
   User.create!(
+    name: names[i] || "User #{i+1}",
     email: "user#{i+1}@example.com",
     password: "password123",
     zipcode: "#{10000 + rand(89999)}"

@@ -65,7 +65,7 @@ const SignInForm = () => {
 
 	const containerStyle = {
 		maxWidth: "400px",
-		margin: "40px auto",
+		margin: "60px auto", // Keep larger margin for sign-in since no nav header shown
 		padding: "0 20px",
 		fontFamily:
 			'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
