@@ -4,8 +4,6 @@
 # Clear existing data to avoid duplicates
 puts "Cleaning database..."
 Vote.destroy_all
-Performer.destroy_all
-User.destroy_all
 
 # Create performers
 puts "Creating performers..."
@@ -17,10 +15,11 @@ performers = [
   { name: "Ed Sheeran" }
 ]
 
+existing_performers_count = Performer.count
 created_performers = performers.map do |performer_attrs|
-  Performer.create!(performer_attrs)
+  Performer.create!(performer_attrs) unless Performer.exists?(performer_attrs)
 end
-puts "Created #{Performer.count} performers"
+puts "Created #{Performer.count - existing_performers_count} performers"
 
 # Create users with passwords
 puts "Creating users..."
@@ -33,7 +32,10 @@ names = [
   "Zoe Baker", "Aaron Paul", "Bella Swan", "Connor MacLeod", "Donna Noble"
 ]
 
+existing_users_count = User.count
 30.times do |i|
+  next if User.exists?(email: "user#{i+1}@example.com")
+
   User.create!(
     name: names[i] || "User #{i+1}",
     email: "user#{i+1}@example.com",
@@ -41,14 +43,14 @@ names = [
     zipcode: "#{10000 + rand(89999)}"
   )
 end
-puts "Created #{User.count} users"
+puts "Created #{User.count - existing_users_count} users"
 
 # Create votes - each user votes for a random performer
 puts "Creating votes..."
 User.all.each do |user|
-  # Randomly decide if this user will vote (80% chance)
-  if rand < 0.8
-    performer = created_performers.sample
+  # Randomly decide if this user will vote (5  User.left_joins(:vote).where(votes: { id: nil }).select(:email, :zipcode)0% chance)
+  if rand < 0.5
+    performer = Performer.all.sample
     Vote.create!(
       user: user,
       performer: performer
